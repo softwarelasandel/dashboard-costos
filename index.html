@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Bootstrap — SaaS Odontológico</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f0a;
+    --surface: #111811;
+    --surface2: #192019;
+    --border: rgba(74,222,128,0.12);
+    --border2: rgba(74,222,128,0.25);
+    --green: #4ade80;
+    --green-dim: #22c55e;
+    --green-muted: rgba(74,222,128,0.08);
+    --red: #f87171;
+    --red-muted: rgba(248,113,113,0.08);
+    --amber: #fbbf24;
+    --amber-muted: rgba(251,191,36,0.08);
+    --text: #e2f5e2;
+    --text-muted: #6b8f6b;
+    --text-dim: #4a6b4a;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Sora', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .header-left {}
+  .scenario-tag {
+    display: inline-block;
+    background: var(--green-muted);
+    border: 1px solid var(--border2);
+    color: var(--green);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: var(--sans);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  h1 span { color: var(--green); }
+  .subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    font-weight: 300;
+  }
+  .live-dot {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--green-dim);
+  }
+  .live-dot::before {
+    content: '';
+    width: 7px; height: 7px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* COSTOS FIJOS */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    margin-top: 2rem;
+  }
+  .costs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+  .cost-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .cost-name { font-size: 12px; color: var(--text-muted); }
+  .cost-val { font-family: var(--mono); font-size: 15px; font-weight: 500; color: var(--text); }
+  .cost-total {
+    background: var(--green-muted);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  .cost-total-label { font-family: var(--mono); font-size: 11px; color: var(--green); letter-spacing: 0.08em; }
+  .cost-total-val { font-family: var(--mono); font-size: 22px; font-weight: 500; color: var(--green); }
+
+  /* SLIDERS */
+  .sliders-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 2rem;
+  }
+  .slider-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .slider-name { font-size: 12px; color: var(--text-muted); font-weight: 400; }
+  .slider-price { font-family: var(--mono); font-size: 11px; color: var(--text-dim); }
+  .slider-count {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .slider-count.basic { color: var(--green); }
+  .slider-count.medium { color: #60a5fa; }
+  .slider-count.pro { color: #c084fc; }
+
+  input[type=range] {
+    width: 100%;
+    height: 3px;
+    -webkit-appearance: none;
+    background: var(--border2);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--green);
+    cursor: pointer;
+  }
+  input[type=range].medium-slider::-webkit-slider-thumb { background: #60a5fa; }
+  input[type=range].pro-slider::-webkit-slider-thumb { background: #c084fc; }
+
+  /* MÉTRICAS PRINCIPALES */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+  .metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 16px;
+  }
+  .metric-label { font-size: 11px; color: var(--text-dim); font-family: var(--mono); letter-spacing: 0.06em; margin-bottom: 8px; }
+  .metric-val { font-family: var(--mono); font-size: 20px; font-weight: 500; }
+  .metric-val.green { color: var(--green); }
+  .metric-val.red { color: var(--red); }
+  .metric-val.amber { color: var(--amber); }
+  .metric-val.blue { color: #60a5fa; }
+  .metric-sub { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+  /* BARRA DE ESTADO */
+  .status-bar {
+    border-radius: 8px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    transition: background 0.3s, border 0.3s;
+  }
+  .status-bar.ganando { background: var(--green-muted); border: 1px solid var(--border2); }
+  .status-bar.perdiendo { background: var(--red-muted); border: 1px solid rgba(248,113,113,0.25); }
+  .status-bar.cerca { background: var(--amber-muted); border: 1px solid rgba(251,191,36,0.25); }
+  .status-icon { font-size: 22px; }
+  .status-text { flex: 1; }
+  .status-title { font-size: 15px; font-weight: 600; }
+  .status-title.g { color: var(--green); }
+  .status-title.r { color: var(--red); }
+  .status-title.a { color: var(--amber); }
+  .status-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; font-weight: 300; }
+  .status-num { font-family: var(--mono); font-size: 18px; font-weight: 500; text-align: right; }
+
+  /* BARRA DE PROGRESO PE */
+  .pe-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 2rem;
+  }
+  .pe-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 14px; }
+  .pe-title { font-size: 13px; font-weight: 600; color: var(--text); }
+  .pe-fraction { font-family: var(--mono); font-size: 12px; color: var(--text-muted); }
+  .progress-track {
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    background: var(--green);
+  }
+  .progress-fill.cerca { background: var(--amber); }
+  .progress-fill.lejos { background: var(--red); }
+  .pe-labels { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; color: var(--text-dim); }
+
+  /* TABLA DE PLANES */
+  .plans-mini {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+  .plan-mini {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+  }
+  .plan-mini-name { font-size: 11px; font-family: var(--mono); letter-spacing: 0.08em; margin-bottom: 6px; }
+  .plan-mini-name.b { color: var(--green); }
+  .plan-mini-name.m { color: #60a5fa; }
+  .plan-mini-name.p { color: #c084fc; }
+  .plan-mini-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); padding: 3px 0; border-bottom: 1px solid var(--border); }
+  .plan-mini-row:last-child { border-bottom: none; }
+  .plan-mini-row span:last-child { font-family: var(--mono); color: var(--text); }
+
+  /* FOOTER */
+  .footer { text-align: center; font-size: 11px; color: var(--text-dim); font-family: var(--mono); margin-top: 1rem; letter-spacing: 0.05em; }
+
+  @media (max-width: 700px) {
+    .sliders-row { grid-template-columns: 1fr; }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    h1 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="scenario-tag">Escenario A — Bootstrap mínimo</div>
+    <h1>Solo <span>tú</span> levantas el negocio</h1>
+    <p class="subtitle">Sin nómina · Sin empleados · Costos fijos mínimos posibles</p>
+  </div>
+  <div class="live-dot">simulador activo</div>
+</div>
+
+<div class="section-label">Costos fijos mensuales reales</div>
+<div class="costs-grid">
+  <div class="cost-item">
+    <span class="cost-name">Tu salario (fundador)</span>
+    <span class="cost-val">$0</span>
+  </div>
+  <div class="cost-item">
+    <span class="cost-name">Hosting Hostinger</span>
+    <span class="cost-val">$189.900</span>
+  </div>
+  <div class="cost-item">
+    <span class="cost-name">Dominio + SSL</span>
+    <span class="cost-val">$50.000</span>
+  </div>
+  <div class="cost-item">
+    <span class="cost-name">WhatsApp Business API</span>
+    <span class="cost-val">$0 (gratis)</span>
+  </div>
+  <div class="cost-item">
+    <span class="cost-name">Google Workspace mín.</span>
+    <span class="cost-val">$30.000</span>
+  </div>
+  <div class="cost-item">
+    <span class="cost-name">Notion / herramientas</span>
+    <span class="cost-val">$0 (plan free)</span>
+  </div>
+  <div class="cost-item">
+    <span class="cost-name">Pasarela de pago (fijo)</span>
+    <span class="cost-val">$20.000</span>
+  </div>
+</div>
+
+<div class="cost-total">
+  <span class="cost-total-label">TOTAL COSTOS FIJOS / MES</span>
+  <span class="cost-total-val">$289.900</span>
+</div>
+
+<div class="section-label">Cuántas clínicas tienes suscritas ahora</div>
+<div class="sliders-row">
+  <div class="slider-block">
+    <div class="slider-header">
+      <span class="slider-name">Plan Basic</span>
+      <span class="slider-price">$149.900/mes</span>
+    </div>
+    <div class="slider-count basic" id="vb">0</div>
+    <input type="range" min="0" max="60" value="0" step="1" id="sb">
+  </div>
+  <div class="slider-block">
+    <div class="slider-header">
+      <span class="slider-name">Plan Medium</span>
+      <span class="slider-price">$249.900/mes</span>
+    </div>
+    <div class="slider-count medium" id="vm">0</div>
+    <input type="range" class="medium-slider" min="0" max="40" value="0" step="1" id="sm">
+  </div>
+  <div class="slider-block">
+    <div class="slider-header">
+      <span class="slider-name">Plan Pro</span>
+      <span class="slider-price">$449.900/mes</span>
+    </div>
+    <div class="slider-count pro" id="vp">0</div>
+    <input type="range" class="pro-slider" min="0" max="20" value="0" step="1" id="sp">
+  </div>
+</div>
+
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="metric-label">CLÍNICAS TOTAL</div>
+    <div class="metric-val blue" id="m-total">0</div>
+    <div class="metric-sub">suscritas activas</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">INGRESOS / MES</div>
+    <div class="metric-val green" id="m-ingresos">$0</div>
+    <div class="metric-sub">antes de variables</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">MARGEN CONTRIB.</div>
+    <div class="metric-val green" id="m-mc">$0</div>
+    <div class="metric-sub">ingresos − variables</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">RESULTADO NETO</div>
+    <div class="metric-val" id="m-neto">$0</div>
+    <div class="metric-sub" id="m-neto-sub">margen − costos fijos</div>
+  </div>
+</div>
+
+<div class="status-bar" id="status-bar">
+  <div class="status-text">
+    <div class="status-title" id="s-title">Sin clínicas aún</div>
+    <div class="status-desc" id="s-desc">Mueve los sliders para simular tu cartera de clientes</div>
+  </div>
+  <div class="status-num" id="s-num">—</div>
+</div>
+
+<div class="pe-section">
+  <div class="pe-header">
+    <span class="pe-title">Progreso al punto de equilibrio</span>
+    <span class="pe-fraction" id="pe-fraction">0 / 3 clínicas Basic mínimas</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+  <div class="pe-labels">
+    <span>$0</span>
+    <span id="pe-mid">$144.950</span>
+    <span>$289.900 (equilibrio)</span>
+  </div>
+</div>
+
+<div class="section-label">Referencia rápida — detalle por plan</div>
+<div class="plans-mini">
+  <div class="plan-mini">
+    <div class="plan-mini-name b">BASIC</div>
+    <div class="plan-mini-row"><span>Precio</span><span>$149.900</span></div>
+    <div class="plan-mini-row"><span>Costo variable</span><span>$15.000</span></div>
+    <div class="plan-mini-row"><span>Margen contrib.</span><span>$134.900</span></div>
+    <div class="plan-mini-row"><span>Para equilibrio solo</span><span>3 clínicas</span></div>
+  </div>
+  <div class="plan-mini">
+    <div class="plan-mini-name m">MEDIUM</div>
+    <div class="plan-mini-row"><span>Precio</span><span>$249.900</span></div>
+    <div class="plan-mini-row"><span>Costo variable</span><span>$25.000</span></div>
+    <div class="plan-mini-row"><span>Margen contrib.</span><span>$224.900</span></div>
+    <div class="plan-mini-row"><span>Para equilibrio solo</span><span>2 clínicas</span></div>
+  </div>
+  <div class="plan-mini">
+    <div class="plan-mini-name p">PRO</div>
+    <div class="plan-mini-row"><span>Precio</span><span>$449.900</span></div>
+    <div class="plan-mini-row"><span>Costo variable</span><span>$45.000</span></div>
+    <div class="plan-mini-row"><span>Margen contrib.</span><span>$404.900</span></div>
+    <div class="plan-mini-row"><span>Para equilibrio solo</span><span>1 clínica</span></div>
+  </div>
+</div>
+
+<div class="footer">SaaS AGENDAMIENTO ODONTOLÓGICO · ESCENARIO A — BOOTSTRAP MÍNIMO · costos fijos: $289.900/mes</div>
+
+<script>
+  const CF = 289900;
+  const precios = { b: 149900, m: 249900, p: 449900 };
+  const cv = { b: 15000, m: 25000, p: 45000 };
+
+  function fmt(n) {
+    const abs = Math.abs(Math.round(n));
+    const s = '$' + abs.toLocaleString('es-CO');
+    return n < 0 ? '−' + s : s;
+  }
+
+  function calc() {
+    const nb = +document.getElementById('sb').value;
+    const nm = +document.getElementById('sm').value;
+    const np = +document.getElementById('sp').value;
+
+    document.getElementById('vb').textContent = nb;
+    document.getElementById('vm').textContent = nm;
+    document.getElementById('vp').textContent = np;
+
+    const ingresos = nb*precios.b + nm*precios.m + np*precios.p;
+    const variables = nb*cv.b + nm*cv.m + np*cv.p;
+    const mc = ingresos - variables;
+    const neto = mc - CF;
+    const total = nb + nm + np;
+
+    document.getElementById('m-total').textContent = total;
+    document.getElementById('m-ingresos').textContent = fmt(ingresos);
+    document.getElementById('m-mc').textContent = fmt(mc);
+
+    const netoEl = document.getElementById('m-neto');
+    netoEl.textContent = fmt(neto);
+    netoEl.className = 'metric-val ' + (neto >= 0 ? 'green' : neto > -150000 ? 'amber' : 'red');
+
+    const pct = Math.min(100, Math.round((mc / CF) * 100));
+    const fill = document.getElementById('progress-fill');
+    fill.style.width = pct + '%';
+    fill.className = 'progress-fill' + (pct >= 100 ? '' : pct >= 60 ? ' cerca' : ' lejos');
+    document.getElementById('pe-fraction').textContent = fmt(mc) + ' de ' + fmt(CF);
+
+    const bar = document.getElementById('status-bar');
+    const st = document.getElementById('s-title');
+    const sd = document.getElementById('s-desc');
+    const sn = document.getElementById('s-num');
+
+    if (total === 0) {
+      bar.className = 'status-bar cerca';
+      st.textContent = 'Sin clínicas aún'; st.className = 'status-title a';
+      sd.textContent = 'Mueve los sliders para simular tu cartera de clientes';
+      sn.textContent = '—'; sn.style.color = 'var(--amber)';
+    } else if (neto >= 0) {
+      bar.className = 'status-bar ganando';
+      st.textContent = '¡Negocio rentable!'; st.className = 'status-title g';
+      sd.textContent = 'Con ' + total + ' clínicas cubres todos tus costos y generas utilidad real';
+      sn.textContent = fmt(neto) + '/mes'; sn.style.color = 'var(--green)';
+    } else if (neto > -150000) {
+      bar.className = 'status-bar cerca';
+      st.textContent = 'Casi en equilibrio'; st.className = 'status-title a';
+      sd.textContent = 'Solo faltan ' + fmt(Math.abs(neto)) + ' — una clínica más te pone en verde';
+      sn.textContent = fmt(neto) + '/mes'; sn.style.color = 'var(--amber)';
+    } else {
+      bar.className = 'status-bar perdiendo';
+      st.textContent = 'Aún en pérdida'; st.className = 'status-title r';
+      sd.textContent = 'Necesitas ' + fmt(Math.abs(neto)) + ' más para cubrir tus costos fijos';
+      sn.textContent = fmt(neto) + '/mes'; sn.style.color = 'var(--red)';
+    }
+  }
+
+  ['sb','sm','sp'].forEach(id => document.getElementById(id).addEventListener('input', calc));
+  calc();
+</script>
+</body>
+</html>
